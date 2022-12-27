@@ -1,0 +1,1 @@
+rasterplot(res_lif1, param);
