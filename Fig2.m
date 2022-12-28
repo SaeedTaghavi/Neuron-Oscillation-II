@@ -85,3 +85,67 @@ xlim([2820, 2900]);
 set(gca,'fontsize',12,'fontname','Arial');
 set(gcf,'Position',[10,10,200,600]);
 exportgraphics(gcf,'2-a-1.eps','ContentType','vector')
+
+%% a
+beta = 1;
+
+param.M        = 100*beta;
+param.Mr       = 66*beta;
+param.lambda_e = 7000*beta;
+param.lambda_i = 7000*beta;
+param.p_ee     = 0.15;
+param.p_ie     = 0.5;
+param.p_ei     = 0.42;
+param.p_ii     = 0.4;
+param.s_ee     = 5;
+param.s_ie     = 2;
+param.s_ei     = 4.91;
+param.s_ii     = 4.91;
+param.tau_ee   = 1.4;
+param.tau_ie   = 1.2;
+param.duration = 3;
+tic;
+res_lif=model_LIF3(param,[]);
+toc;
+
+beta = 1;
+
+param.M        = 100*beta;
+param.Mr       = 66*beta;
+param.lambda_e = 7000*beta;
+param.lambda_i = 7000*beta;
+param.p_ee     = 1;
+param.p_ie     = 1;
+param.p_ei     = 1;
+param.p_ii     = 1;
+param.s_ee     = 5*0.15;
+param.s_ie     = 2*0.5;
+param.s_ii     = 4.91*0.40;
+param.s_ei = 4.91*0.43;
+tic;
+res_lif4=model_LIF3(param,[]);
+toc;
+%%
+figure;
+subplot(2,1,1);
+rasterplot(res_lif, param);
+hold on;
+xline(res_lif.MFE_time(1:res_lif.wave_count,1),'b','LineWidth',1);
+hold on;
+xline(res_lif.MFE_time(1:res_lif.wave_count,2),'LineWidth',1);
+xlim([2500, 3000]);
+xlabel('Time (ms)')
+set(gca,'fontsize',12,'fontname','Arial');
+
+subplot(2,1,2);
+rasterplot(res_lif4, param);
+hold on;
+xline(res_lif4.MFE_time(1:res_lif4.wave_count,1),'b','LineWidth',1);
+hold on;
+xline(res_lif4.MFE_time(1:res_lif4.wave_count,2),'LineWidth',1);
+xlim([2500, 3000]);
+xlabel('Time (ms)')
+set(gca,'fontsize',12,'fontname','Arial');
+set(gcf,'Position',[10,10,1200,600]);
+%print(gcf, '-dpdf', 'figure/Publication/figure2-1.pdf','-bestfit');
+
