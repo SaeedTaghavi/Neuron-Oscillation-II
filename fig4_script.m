@@ -1,226 +1,31 @@
-%% Setting Path
-
+  %% Setting Path
 addpath('module');
+%% Parameters for Model LIF
 
-%% Parameters
-
-ps = 0.25:0.03:0.46;
-seis = 4.91*(0.40:0.004:0.444);
-taus = 0:0.5:5.5;
-sexs = 0.2:0.8:9;
-
-ps=0.25:0.25:1
-seis=1.96:0.06:2.14
-NGEs = cell(12,1);
-NGIs = cell(12,1);
-HEs = cell(12,1);
-HIs = cell(12,1);
-RESs = cell(12,1);
-MEs = cell(12,1);
-MIs = cell(12,1);
-
-% Parameters for Model LIF
-for i=1:4
-
-
-
-%    p=ps(i);
-      p=0.46;
-    alpha = 1;
-    beta = 1;
-    param.ne = 300;
-    param.ni = 100;
-    param.M        = 100*beta;
-    param.Mr       = 66*beta;
-    param.p_ee     = p;
-    param.p_ie     = p;
-    param.p_ei     = p;
-    param.p_ii     = p;
-    param.s_ee     = 5*0.15/alpha*beta/p;
-    param.s_ie     = 2*0.5/alpha*beta/p;
-    param.s_ei     = 4.91*0.421/alpha*beta/p;
-%    param.s_ei     = seis(i)/alpha*beta/p;
-    param.s_ii     = 4.91*0.40/alpha*beta/p;
-
-
-
-    param.tau_ee   = 1.4;
-    param.tau_ie   = 1.2;
-    param.tau_ei    = 4.5;
-    param.tau_ii    = 4.5;
-%     param.tau_re=0;
-%     param.tau_ri=0;
-    param.tau_re=taus((i-1)*3+1);
-    param.tau_ri=taus((i-1)*3+1);
-    param.duration = 3;
-    param.delta_time = 0.1;
-
-    param.factor_Leak=0;
-    param.LeakE = 20;
-    param.s_exe = 1;
-    param.s_exi = 1;
-    param.lambda_e = 7000*beta/sexs(2);
-    param.lambda_i = 7000*beta/sexs(2);
-%     param.s_exe = sexs((i-1)*3+1);
-%     param.s_exi = sexs((i-1)*3+1);
-%     param.lambda_e = 7000*beta/sexs((i-1)*3+1);
-%     param.lambda_i = 7000*beta/sexs((i-1)*3+1);
-    param.LeakI = 16.7;
-    param.factor_Leak = inf;
-
-    param2=param;
-    param2.gridsize=0.1;
-
-    % Model LIF
-
-    tic;
-    res_lif=model_LIF3(param2,[]);
-    toc;
-
-    VE = res_lif.VE;
-    VI = res_lif.VI;
-    HE = res_lif.HE;
-    HI = res_lif.HI;
-    HE = sum(HE,2);
-    HI = sum(HI,2);
-    VE = VE./beta;
-    VI = VI./beta;
-    NGE = sum(VE>50,2);
-    NGI = sum(VI>50,2);
-    ME = mean(VE,2);
-    MI = mean(VI,2);
-
-    NGEs{i} = NGE;
-    NGIs{i} = NGI;
-    HEs{i} = HE;
-    HIs{i} = HI;
-    RESs{i} = res_lif;
-    MEs{i} = ME;
-    MIs{i} = MI;
-    % figure;
-    % a=plot3(HE, HI, NGE);
-    % a.Color(4) = .2;
-    % box on;
-    % grid on;
-    % xlabel('HE');
-    % ylabel('HI');
-    % zlabel('NGE');
-end
-c=turbo;
-%%
-figure;
-for i = 1:12
-    subplot(3,4,i);
-    mc_plot(RESs{i},HEs{i}, HIs{i}, NGEs{i},c);
-    %a.Color(4) = .2;
-    box on;
-    grid on;
-    xlabel('HE');
-    ylabel('HI');
-    zlabel('NGE');
-    %     title(['S_{ex}=',num2str(sexs(i))]);
-    %     title(['S_{ei}=',num2str(seis(i))]);
-    %     title(['P=',num2str(ps(i))]);
-    title(['Ref=',num2str(taus((i-1)*3+1))]);
-    view([-30,40]);
-end
-set(gcf,'Position',[10,10,1600,300]);
-%saveas(gcf,['P=', num2str(ps(1)),'-',num2str(ps(12)),'.fig'])
-
-%%
-figure;
-for i = 1:4
-    subplot(1,4,i);
-    dm_record=mc_plot(RESs{i},HEs{i}, HIs{i}, NGEs{i},c);
-    %a.Color(4) = .2;
-    box on;
-    grid on;
-    xlabel('g^{E}')
-    ylabel('g^{I}')
-    if i ==1
-        zlabel('# of gate E neurons')
-    end
-%     xticks([0 12000 24000]*i);
-%     xticklabels([0 120 240]*i);
-%     yticks([0 6000 12000 18000]*i);
-%     yticklabels([0 60 120 180]*i);
-    xticks([0 20000 40000]);
-    xticklabels([0 200 400]);
-    yticks([0 10000 20000 30000]);
-    yticklabels([0 100 200 300]);
-         title(['S^{ext}=',num2str(sexs((i-1)*3+1)),'×','10^{-2}']);
-
-%      title(['S^{EI}=',num2str(seis(i)),'×','10^{-2}']);
-%         title(['P=',num2str(ps(i))]);
-    view([-25,45]);
-    xlim([0 40000]);
-    ylim([0 30000]);
-%          xlim([0 24000*i]);
-%          ylim([0 18000*i]);
-    %      xticks([0 12000 24000]*i);
-    %      yticks([0 6000 12000 18000]*i)
-end
-set(gcf,'Position',[10,10,1600,300]);
-%saveas(gcf,['P=', num2str(ps(1)),'-',num2str(ps(12)),'.fig'])
-
-%%
-figure;
-for i = 1:4
-    subplot(1,4,i);
-    dm_record=start_point_plot(RESs{i},MEs{i},MIs{i},HIs{i},c);
-    %a.Color(4) = .2;
-    box on;
-    grid on;
-    xlabel('m^{E}')
-    ylabel('m^{I}')
-    if i ==1
-        zlabel('g^{I}')
-    end
-%     xticks([0 12000 24000]*i);
-%     xticklabels([0 120 240]*i);
-%     yticks([0 6000 12000 18000]*i);
-%     yticklabels([0 60 120 180]*i);
-%     xticks([0 20000 40000]);
-%     xticklabels([0 200 400]);
-    xticks([50 55 60 65 70 75 80 85 90]);
-    yticks([30 40 50 60 70 80 90])
-
-    zticks([0 2000 4000 6000]);
-    zticklabels([0 20 40 60]);
-%          title(['S^{ext}=',num2str(sexs((i-1)*3+1)),'×','10^{-2}']);
-%         title(['S_{ei}=',num2str(seis(i))]);
-%      title(['S^{EI}=',num2str(seis(i)),'×','10^{-2}']);
-%          title(['P=',num2str(ps(i))]);
-   title(['\tau_R=',num2str(taus((i-1)*3+1))])
-    view([-25,55]);
-%       xlim([50 90]);
-%       ylim([50 90]);
-      zlim([0 4000]);
-%          xlim([0 24000*i]);
-%          ylim([0 18000*i]);
-    %      xticks([0 12000 24000]*i);
-    %      yticks([0 6000 12000 18000]*i)
-end
-set(gcf,'Position',[10,10,1600,300]);
-%saveas(gcf,['P=', num2str(ps(1)),'-',num2str(ps(12)),'.fig'])
-%%
-p1= 0.13;
-p2 = 1;
 alpha = 1;
 beta = 1;
 param.ne = 300;
 param.ni = 100;
 param.M        = 100*beta;
 param.Mr       = 66*beta;
-param.p_ee     = p1;
-param.p_ie     = p2;
-param.p_ei     = p2;
-param.p_ii     = p2;
-
-param.s_ee     = 5*0.15/alpha*beta/p1;
-param.s_ie     = 2*0.5/alpha*beta/p2;
-param.s_ei     = 4.91*0.419/alpha*beta/p2;
-param.s_ii     = 4.91*0.40/alpha*beta/p2;
+% param.p_ee     = 0.15;
+% param.p_ie     = 0.5;
+% param.p_ei     = 0.415;
+% param.p_ii     = 0.4;
+param.p_ee     = 0.8;
+param.p_ie     = 0.8;
+param.p_ei     = 0.8;
+param.p_ii     = 0.8;
+% param.s_ee     = 5/alpha*beta;
+% param.s_ie     = 2/alpha*beta;
+% param.s_ei     = 4.91/alpha*beta;
+% param.s_ii     = 4.91/alpha*beta;
+param.s_ee     = 5*0.15/alpha*beta/param.p_ee;
+param.s_ie     = 2*0.5/alpha*beta/param.p_ie;
+param.s_ei     = 4.91*0.44  /alpha*beta/param.p_ei;
+param.s_ii     = 4.91*0.4/alpha*beta/param.p_ii;
+param.s_exe = 1;
+param.s_exi = 1;
 
 param.lambda_e = 7000*beta;
 param.lambda_i = 7000*beta;
@@ -231,96 +36,128 @@ param.tau_ii    = 4.5;
 param.tau_re=0;
 param.tau_ri=0;
 param.duration = 3;
-param.delta_time = 0.1;
 
 param.factor_Leak=0;
 param.LeakE = 20;
-param.s_exe = 1;
-param.s_exi = 1;
-param.LeakI = 16.7;
-param.factor_Leak = inf;
 
-param2=param;
-param2.gridsize=0.1;
+param.LeakI = 16.7;
+
+param.factor_Leak = inf;
+param.ns_ee=alpha;
+param.ns_ie=alpha;
+param.ns_ei=alpha;
+param.ns_ii=alpha;
+param.gridsize=0.1;
 
 % Model LIF
-
 tic;
-res_lif=model_LIF3(param2,[]);
+res_lif_0_001=model_LIF3_fixconnection(param,[]);
 toc;
-
-VE = res_lif.VE;
-VI = res_lif.VI;
-HE = res_lif.HE;
-HI = res_lif.HI;
-HE = sum(HE,2);
-HI = sum(HI,2);
-VE = VE./10;
-VI = VI./10;
-NGE = sum(VE>60,2);
-NGI = sum(VI>60,2);
-
-%
 figure;
-a=plot3(HE, HI, NGE);
-a.Color(4) = .2;
-box on;
-grid on;
-xlabel('HE');
-ylabel('HI');
-zlabel('NGE');
-title(['P=',num2str(p1)]);
-view([-30,40]);
+rasterplot(res_lif_0_001, param);
+xlim([2000, 3000]);
+
+%% MFE figure
+
+figure;
+rasterplot(res_lif, param);
+hold on;
+xline(res_lif.MFE_time(1:res_lif.wave_count,1),'b','LineWidth',1);
+hold on;
+xline(res_lif.MFE_time(1:res_lif.wave_count,2),'LineWidth',1);
+xlim([2000, 3000]);
+
+%% 代码记录
+
+%sexe
+param2.s_exe = 0.2+(i-1)*0.4;
+param2.s_exi = 0.2+(i-1)*0.4;
+param2.lambda_e = 7000*beta/param2.s_exe;
+param2.lambda_i = 7000*beta/param2.s_exi;
+%sei
+param2.s_ei=(0.40+i*0.0005)*4.91;
+%p
+param2.p_ee     = 0.25+0.015/2*i;
+param2.p_ie     = 0.25+0.015/2*i;
+param2.p_ei     = 0.25+0.015/2*i;
+param2.p_ii     = 0.25+0.015/2*i;
+param2.s_ee     = 5*0.15/alpha*beta/param2.p_ee;
+param2.s_ie     = 2*0.5/alpha*beta/param2.p_ie;
+param2.s_ei     = 4.91*0.41/alpha*beta/param2.p_ei;
+param2.s_ii     = 4.91*0.40/alpha*beta/param2.p_ii;
+
+param2.p_ee     = 1/(1+0.03*i);
+param2.p_ie     = 1/(1+0.03*i);
+param2.p_ei     = 1/(1+0.03*i);
+param2.p_ii     = 1/(1+0.03*i);
+param2.s_ee     = 5*0.15/alpha*beta/param2.p_ee;
+param2.s_ie     = 2*0.5/alpha*beta/param2.p_ie;
+param2.s_ei     = 4.91*0.424/alpha*beta/param2.p_ei;
+param2.s_ii     = 4.91*0.40/alpha*beta/param2.p_ii;
+
+%tau
+param2.tau_re=i*0.2;
+param2.tau_ri=i*0.2;
+
+%tau_e
+param2.tau_ee   = 1.4*(0.5+i*0.05);
+param2.tau_ie   = 1.2*(0.5+i*0.05);
 %%
-i=2
-mc_plot(RESs{i},HEs{i}, HIs{i},NGEs{i},c);
+dmean_v_exnoise=zeros(50,600);
+
+parfor i=1:50
+    param2=param;
+    i
+
+param2.tau_re=i*0.1;
+param2.tau_ri=i*0.1;
+    res_lif=model_LIF3(param2,[]);
+    ind=find(res_lif.MFE_time(:,1)~=0,1,"last");
+    MFE_time=res_lif.MFE_time(1:ind,1);
+    dm=mean(res_lif.VE(ceil(MFE_time*10-20),:),2)-mean(res_lif.VI(ceil(MFE_time*10-20),:),2);
+    dm=clean_dm(dm);
+    dm=dm(ceil(length(dm)*0.3):end)';
+    dmean_v_exnoise(i,:)=[length(dm)-1,dm(2:end)-dm(1:end-1),zeros(1,600-length(dm))];
+end
 %%
-function dm_record=mc_plot(res_lif,HE,HI,NGE,c)
-ind=find(res_lif.MFE_time(:,1)~=0,1,"last")-1;
-for i=1:ind
-    if res_lif.wave_spike_count(i)>150
-        t_start=round(res_lif.MFE_time(i,1)*10);
-        t_end=round(res_lif.MFE_time(i+1,1)*10);
-        dm=mean(res_lif.VE(t_start-20,:))-mean(res_lif.VI(t_start-20,:));
-        dm=ceil(dm*2.8+150);
-        dm_record(i)=dm;
-        plot3(HE(t_start:t_end),HI(t_start:t_end),NGE(t_start:t_end),'Color',c(dm,:));
-        plot3(HE(t_start),HI(t_start),NGE(t_start),'.','Color','c','MarkerSize',15)
-        hold on;
-        
-    else
-        t_start=round(res_lif.MFE_time(i,1)*10);
-        t_end=round(res_lif.MFE_time(i+1,1)*10);
-        plot3(HE(t_start:t_end),HI(t_start:t_end),NGE(t_start:t_end),'b');
-        plot3(HE(t_start),HI(t_start),NGE(t_start),'.','Color','c','MarkerSize',15)
-        hold on;
-        
-    end
-end
- zlim([0 300])
-end
+dens=gauss_density(dmean_v_exnoise,[40:-1:-40]);
+imagesc(dens);
+colormap turbo;
+caxis([0 0.12]);
+xticks([1 10 20 30 40 50]);
+
+xticklabels([0 1 2 3 4 5]);
+yticks([1 21 41 61 81]);
+yticklabels([0.4 0.2 0 -0.2 -0.4])
+xlabel('');
+ylabel('\Deltam');
+set(gcf,'Position',[10,10,1200,600]);
+set(gca,'FontSize',30);
+set(gca,'FontName','Arial');
+%%
+video(res_lif_08)
 
 %%
-function dm_record=start_point_plot(res_lif,HE,HI,NGE,c)
-ind=find(res_lif.MFE_time(:,1)~=0,1,"last")-1;
-for i=1:ind
-    if res_lif.wave_spike_count(i)>150
-        t_start=round(res_lif.MFE_time(i,1)*10);
-        t_end=round(res_lif.MFE_time(i+1,1)*10);
-        dm=mean(res_lif.VE(t_start-20,:))-mean(res_lif.VI(t_start-20,:));
-        dm=ceil(dm*2.8+150);
-        dm_record(i)=dm;
-        plot3(HE(t_start),HI(t_start),NGE(t_start),'.','Color',c(dm,:),'MarkerSize',15)
-        hold on;
-        
-    else
-        t_start=round(res_lif.MFE_time(i,1)*10);
-        t_end=round(res_lif.MFE_time(i+1,1)*10);
-        
-        plot3(HE(t_start),HI(t_start),NGE(t_start),'.','Color','b','MarkerSize',15)
-        hold on;
-        
-    end
+function dm=clean_dm(dm)
+l=length(dm);
+i=1;
+while i<l
+    dm(i)=(dm(i)+dm(i+1)<50)*dm(i);
+    i=i+1;
 end
-% zlim([0 300])
+dm=dm(dm~=0);
+end
+
+
+%%
+function []=video(res_lif)
+for i=300:3:1000
+subplot(2,1,1)
+histogram(res_lif.VE(i,:),[-66:1:100]);
+ylim([0 30]);
+subplot(2,1,2)
+histogram(res_lif.VI(i,:),[-66:1:100]);
+ylim([0 30]);
+pause(0.6);
+end
 end

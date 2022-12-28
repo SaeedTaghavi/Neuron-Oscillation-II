@@ -49,7 +49,7 @@ param.ns_ei=alpha;
 param.ns_ii=alpha;
 param.gridsize=0.1;
 
-%%
+%% 这段不用跑
 param.duration=0.3;
 init=struct;
 init.ve=sqrt(75)*randn(1,300)+5;
@@ -70,7 +70,7 @@ for i =1:res_lif.wave_count
     xline(res_lif.MFE_time(i,2),'LineWidth',1);
     hold on;
 end
-%%
+%% fig3
 [res,dm,res_lif,index]=dm_plot(param,'test');
 
 %%
@@ -102,7 +102,7 @@ parfor d=1:numel(xrange)
         init.he=zeros(2,300);
         init.hi=zeros(2,100);
 
-        res_lif_small=model_LIF3(param2,init);
+        res_lif_small=model_LIF_FC(param2,init);
         ind=find(res_lif_small.wave_spike_count>300);
         ind=min(ind);
         if res_lif_small.MFE_time(ind,1)>10
@@ -179,7 +179,7 @@ for trial=2:length(dm)
     init.he=zeros(2,300);
     init.hi=zeros(2,100);
 
-    res_lif_small=model_LIF3(param2,init);
+    res_lif_small=model_LIF_FC(param2,init);
     ind=find(res_lif_small.wave_spike_count>300);
     ind=min(ind);
     if res_lif_small.MFE_time(ind,1)>10
@@ -233,7 +233,7 @@ for trial=2:length(dm)
     init.he=zeros(2,300);
     init.hi=zeros(2,100);
 
-    res_lif_small=model_LIF3(param2,init);
+    res_lif_small=model_LIF_FC(param2,init);
     ind=find(res_lif_small.wave_spike_count>300);
     ind=min(ind);
     if res_lif_small.MFE_time(ind,1)>10
@@ -287,7 +287,7 @@ for trial=2:length(dm)
     init.he=zeros(2,300);
     init.hi=zeros(2,100);
 
-    res_lif_small=model_LIF3(param2,init);
+    res_lif_small=model_LIF_FC(param2,init);
     ind=find(res_lif_small.wave_spike_count>300);
     ind=min(ind);
     if res_lif_small.MFE_time(ind,1)>10
