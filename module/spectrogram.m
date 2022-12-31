@@ -18,7 +18,7 @@ for j=1:num_spec
 end
 
 % %smoothing
-% % spectrogram1=conv2(spectrogram,ones(1,6)/6, 'valid');
+% spectrogram=conv2(spectrogram,ones(1,6)/6, 'same');
 % % frs   = linspace(fr(1), fr(2), fr(2)-fr(1)+1);
 % % times = 0: num_spec;
 % % times = times *bin + 0;
