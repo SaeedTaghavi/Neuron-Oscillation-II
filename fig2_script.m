@@ -6,14 +6,15 @@ param.ne = 300;
 param.ni = 100;
 param.M        = 100*beta;
 param.Mr       = 66*beta;
-param.p_ee     = 1;
-param.p_ie     = 1;
-param.p_ei     = 1;
-param.p_ii     = 1;
-param.s_ee     = 5*0.15/alpha*beta;
-param.s_ie     = 2*0.5/alpha*beta;
-param.s_ei     = 4.91*0.424/alpha*beta;
-param.s_ii     = 4.91*0.40/alpha*beta;
+p = 0.8;
+param.p_ee     = p;
+param.p_ie     = p;
+param.p_ei     = p;
+param.p_ii     = p;
+param.s_ee     = 5*0.15/alpha*beta/p;
+param.s_ie     = 2*0.5/alpha*beta/p;
+param.s_ei     = 4.91*0.424/alpha*beta/p;
+param.s_ii     = 4.91*0.40/alpha*beta/p;
 
 param.lambda_e = 7000*beta;
 param.lambda_i = 7000*beta;
@@ -52,14 +53,14 @@ param1.s_ei     = 4.91;
 param1.s_ii     = 4.91;
 
 tic;
-res_lif=model_LIF3(param1,[]);
+res_lif=model_LIF_FC(param1,[]);
 toc;
 
 %%
 param2 = param;
-param2.s_ei =  4.91*0.43;
+param2.s_ei =  4.91*0.414;
 tic;
-res_lif2=model_LIF3(param2,[]);
+res_lif2=model_LIF_FC(param2,[]);
 toc;
 
 %%
@@ -86,66 +87,31 @@ set(gca,'fontsize',12,'fontname','Arial');
 set(gcf,'Position',[10,10,200,600]);
 exportgraphics(gcf,'2-a-1.eps','ContentType','vector')
 
-%% a
-beta = 1;
+%% Panel C 
 
-param.M        = 100*beta;
-param.Mr       = 66*beta;
-param.lambda_e = 7000*beta;
-param.lambda_i = 7000*beta;
-param.p_ee     = 0.15;
-param.p_ie     = 0.5;
-param.p_ei     = 0.42;
-param.p_ii     = 0.4;
-param.s_ee     = 5;
-param.s_ie     = 2;
-param.s_ei     = 4.91;
-param.s_ii     = 4.91;
-param.tau_ee   = 1.4;
-param.tau_ie   = 1.2;
-param.duration = 3;
-tic;
-res_lif=model_LIF3(param,[]);
-toc;
+t = 2583;
+res = res_lif2;
+VE = res_lif2.VE;
+VI = res_lif2.VI;
+VE_t = VE(t,:)/100;
+VI_t = VI(t,:)/100;
+edges= -66:2:100;
+edges= edges/100;
 
-beta = 1;
-
-param.M        = 100*beta;
-param.Mr       = 66*beta;
-param.lambda_e = 7000*beta;
-param.lambda_i = 7000*beta;
-param.p_ee     = 1;
-param.p_ie     = 1;
-param.p_ei     = 1;
-param.p_ii     = 1;
-param.s_ee     = 5*0.15;
-param.s_ie     = 2*0.5;
-param.s_ii     = 4.91*0.40;
-param.s_ei = 4.91*0.43;
-tic;
-res_lif4=model_LIF3(param,[]);
-toc;
-%%
+% Plots
 figure;
 subplot(2,1,1);
-rasterplot(res_lif, param);
+histogram(VE_t,edges,'Normalization', 'probability','FaceColor','red');
 hold on;
-xline(res_lif.MFE_time(1:res_lif.wave_count,1),'b','LineWidth',1);
+xline(mean(VE_t),'Color','Green','LineWidth',1);
 hold on;
-xline(res_lif.MFE_time(1:res_lif.wave_count,2),'LineWidth',1);
-xlim([2500, 3000]);
-xlabel('Time (ms)')
-set(gca,'fontsize',12,'fontname','Arial');
-
+xline(mean(VI_t),'Color','Green','LineWidth',1);
+set(gca,'fontsize',15,'fontname','Arial');
+ylabel("Excitatory");
 subplot(2,1,2);
-rasterplot(res_lif4, param);
+histogram(VI_t,edges,'Normalization', 'probability','FaceColor','blue');
 hold on;
-xline(res_lif4.MFE_time(1:res_lif4.wave_count,1),'b','LineWidth',1);
-hold on;
-xline(res_lif4.MFE_time(1:res_lif4.wave_count,2),'LineWidth',1);
-xlim([2500, 3000]);
-xlabel('Time (ms)')
-set(gca,'fontsize',12,'fontname','Arial');
-set(gcf,'Position',[10,10,1200,600]);
-%print(gcf, '-dpdf', 'figure/Publication/figure2-1.pdf','-bestfit');
-
+xline(mean(VI_t),'Color','Green','LineWidth',1);
+set(gca,'fontsize',15,'fontname','Arial');
+ylabel("Inhibitory");
+set(gcf,'Position',[10,10,1000,300]);
