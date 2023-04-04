@@ -1,3 +1,8 @@
+%% Fig 3
+% Matlab script to generate Fig 3. 
+% - Panel A: MFE mapping of 1 beat
+% - Panel B: MFE mapping of 2 beat
+% - Panel C: MFE mapping of 3 beat
 %% Setting Path
 addpath('module');
 %% Parameters for Model LIF

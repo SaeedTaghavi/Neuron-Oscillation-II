@@ -1,3 +1,8 @@
+%% Fig 2
+% Matlab script to generate Fig 2. 
+% - Panel A: Two different beats and the identification of MFE 
+% - Panel B: MFE-to-MFE iteration (by Adobe Illustrator)
+% - Panel C: Example of E/I population 
 %% Setting paths
 addpath('module');
 alpha = 1;

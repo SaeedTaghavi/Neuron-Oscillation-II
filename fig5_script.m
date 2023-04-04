@@ -1,5 +1,10 @@
-%% Setting Path
+% % Fig5 
+% Matlab script to generate Fig 5.
+% Multi-band oscillations produced by network simulation. 
+% - Panel A: Four points in the 1D parameter space of $S^{EI}$ are selected.
+% - Panel B, C, D, E:  Similar to A, but the varying parameters correspond to Fig 5. 
 
+%% Setting Path
 addpath('module');
 
 %% Parameters

@@ -1,3 +1,6 @@
+%% figRing
+% Rasterplot of the LIF ring model. 
+
 %% Setting Path
 
 addpath('module');

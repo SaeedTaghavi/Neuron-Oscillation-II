@@ -1,4 +1,8 @@
-  %% Setting Path
+%% Fig 4
+% Matlab script to generate Fig 4.
+% MFE beat bifucation maps of tau^E, S^Ext, P, \tau_R$. 
+
+%% Setting Path
 addpath('module');
 %% Parameters for Model LIF
 

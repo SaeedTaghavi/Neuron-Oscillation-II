@@ -1,3 +1,5 @@
+%% figS4
+% The distribution of the states of MFE initiations in the reduced state space. 
 %% Setting Path
 
 addpath('module');
