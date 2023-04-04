@@ -8,7 +8,7 @@
   - model_LIF_FC.m: LIF model with fixed connection 
   - model_LIF_Ring.m: LIF ring model 
   - model_ode.m: ODE model 
-- outputs: Running results of some models
+- outputs (gitignored): Running results of some models
 
 ## Examples 
 
