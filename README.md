@@ -1,6 +1,14 @@
 # Neuron-Oscillation-II
 
+## Folders
 
+- figs: All the output plots 
+- module: All the functions for models and plots
+  - model_LIF.m: LIF model
+  - model_LIF_FC.m: LIF model with fixed connection 
+  - model_LIF_Ring.m: LIF ring model 
+  - model_ode.m: ODE model 
+- outputs: Running results of some models
 
 ## Examples 
 
