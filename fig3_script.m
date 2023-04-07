@@ -54,32 +54,15 @@ param.ns_ei=alpha;
 param.ns_ii=alpha;
 param.gridsize=0.1;
 
-%% 这段不用跑
-param.duration=0.3;
-init=struct;
-init.ve=sqrt(75)*randn(1,300)+5;
-init.vi=sqrt(80)*randn(1,100);
-m=max(max(init.ve),max(init.vi))-100;
-init.ve=init.ve-m-1;
-init.vi=init.vi-m-1;
-init.he=zeros(2,300);
-init.hi=zeros(2,100);
-res_lif=model_LIF3(param,init);
-
-figure;
-rasterplot(res_lif, param);
-hold on;
-for i =1:res_lif.wave_count
-    xline(res_lif.MFE_time(i,1),'b','LineWidth',1);
-    hold on;
-    xline(res_lif.MFE_time(i,2),'LineWidth',1);
-    hold on;
-end
 %% fig3
 [res,dm,res_lif,index]=dm_plot(param,'test');
 
-%%
+%% figS1
 [res,dm,index]=invariant_plot(param,'test');
+
+
+
+
 %%
 function [res,dm,res_lif,index]=dm_plot(param,name)
 res_lif=model_LIF3(param,[]);
