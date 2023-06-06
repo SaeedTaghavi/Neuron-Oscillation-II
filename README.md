@@ -62,3 +62,6 @@
 - figS5-7_script.m
   Comparing ER networks and annealed architecture for 3 connection probability values.
 
+### todo
+- [ ] review the results
+- [ ] reproduce results with python
